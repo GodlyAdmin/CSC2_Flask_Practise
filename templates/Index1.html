@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Website</title>
+</head>
+<body>
+    <ul>
+        {% for flower, details in flowers.items() %}
+        <li>{{ flower }} - ${{ details ['price'] }} (Stock: {{ details ['stock'] }})</li>
+        {% endfor %} 
+        <h3>Add-ons:</h3>
+        {% for addon, details in addons.items() %}
+        <li>{{ addon }} - ${{ details ['price'] }}  (Stock: {{ details ['stock'] }})</li>
+        {% endfor %}
+    </ul>
+    <h1></h1>
+</body>
+</html>
