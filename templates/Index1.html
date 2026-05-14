@@ -4,17 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask Website</title>
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <ul>
-        {% for flower, details in flowers.items() %}
-        <li>{{ flower }} - ${{ details ['price'] }} (Stock: {{ details ['stock'] }})</li>
-        {% endfor %} 
-        <h3>Add-ons:</h3>
-        {% for addon, details in addons.items() %}
-        <li>{{ addon }} - ${{ details ['price'] }}  (Stock: {{ details ['stock'] }})</li>
-        {% endfor %}
+    <h1>Welcome to our Flower Shop!</h1>
+    <form action="{{ url_for('add_to_cart' )}}" method="post">
+        <fieldset>
+            <legend for="flower">Select Flowers</legend>
+            <select name="flower" id="flower">
+                {% for flower, details in flowers.items() %}
+                <option value="{{ flower }}">{{ flower }} - ${{ details['price'] }}</option>
+                {% endfor %}
+            </select>
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity" value="1" min="1">
+            <button type="submit">Add to cart</button>
+        </fieldset>
+    </form>
+        {% with messages = get_flashed_messages () %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+    <form action="{{ url_for('add_to_cart' )}}" method="post">
+        <fieldset>
+            <legend for="addon">Select Add-ons</legend>
+            <select name="addon" id="addon">
+                {% for addon, details in addons.items() %}
+                <option value="{{ addon }}">{{ addon }} - ${{ details['price'] }}</option>
+                {% endfor %}
+            </select>
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity" value="1" min="1">
+            <button type="submit">Add to cart</button>
+        </fieldset>
+    </form>
     </ul>
-    <h1></h1>
+    <h2>Your Cart</h2>
+    {% if cart %}
+        <ul>
+            {% for item, details in cart.items() %}
+                <li>{{ item }}: {{'%.2f' % details['quantity'] }} x
+                                                ${{ details['price'] }}
+                    = ${{ details['quantity'] * details['price'] }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Your cart is empty</p>
+    {% endif %}
 </body>
 </html>

@@ -1,6 +1,6 @@
 {
-    "Rose": {"price": 10, "stock": 50},
-    "Tulip": {"price": 10, "stock": 40},
-    "Lily": {"price": 10, "stock": 30},
-    "Daisy": {"price": 10, "stock": 100}
+    "Rose": {"price": 13, "stock": 50},
+    "Tulip": {"price": 11, "stock": 40},
+    "Lily": {"price": 9, "stock": 30},
+    "Daisy": {"price": 15, "stock": 100}
 }
