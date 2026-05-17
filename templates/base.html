@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <meta charset="UTF-8">
     <title>{% block title %}Flower Shop{% endblock %}</title>
 </head>
@@ -10,6 +11,9 @@
     <h1>Online Flower Shop</h1>
     <nav>
         <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('order_history') }}">Orders</a>
+        <a href="{{ url_for('checkout') }}">Checkout</a>
     </nav>
 </header>
 

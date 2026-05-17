@@ -36,7 +36,7 @@ def about():
 
 @app.route('/checkout')
 def checkout():
-    return render_template('invoice.html')
+    return render_template('invoices.html')
 
 @app.route('/orders')
 def order_history():
