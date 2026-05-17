@@ -61,21 +61,7 @@ def remove_from_cart():
         session['cart'] = cart
         session.modified = True
 
-    return redirect(url_for('index1'))
-@app.route('/index1')
-def index1():
-    flowers = load_data()
-    addons = load_addons()
-    cart = session.get('cart', {})
-    total = calculate_total(cart)
-
-    return render_template(
-        'index1.html',
-        flowers=flowers,
-        addons=addons,
-        cart=cart,
-        total=total
-    )
+    return redirect(url_for('index'))
 
 # Add selected flower to the shopping cart
 @app.route('/add_to_cart', methods=['POST'])
@@ -98,7 +84,7 @@ def add_to_cart():
 
     if item not in products:
         flash("Invalid item selected.")
-        return redirect(url_for('index1'))
+        return redirect(url_for('index'))
 
     if item in cart:
         cart[item]['quantity'] += quantity
@@ -113,7 +99,7 @@ def add_to_cart():
 
     flash(f"{quantity} {item}(s) added to cart.")
 
-    return redirect(url_for('index1'))
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
