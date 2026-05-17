@@ -53,7 +53,7 @@ def remove_from_cart():
 
         cart[item]['quantity'] -= 1
 
-        flash(f"1 {item} removed from cart.")
+        flash(f"Removed 1 {item.capitalize()} from the cart.")
 
         if cart[item]['quantity'] <= 0:
             del cart[item]
