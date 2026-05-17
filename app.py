@@ -12,7 +12,13 @@ def index():
     flowers = load_data()
     addons = load_addons()
     cart = session.get('cart', {})
-    return render_template('index.html', flowers=flowers, addons=addons, cart=cart)
+    total = calculate_total(cart)
+    return render_template('index.html', flowers=flowers, addons=addons, cart=cart, total=total)
+
+# Calculate total cost based on cart contents and selected addons
+def calculate_total(cart) :
+    total = sum(item['price'] * item['quantity'] for item in cart. values())
+    return total
 
 def load_data():
     with open('data/flowers.json') as file:
@@ -36,17 +42,39 @@ def checkout():
 def order_history():
     return render_template('order_history.html')
 
+@app.route("/remove_from_cart")
+def remove_from_cart():
+
+    item = request.args.get('item')
+
+    cart = session.get('cart', {})
+
+    if item in cart:
+
+        cart[item]['quantity'] -= 1
+
+        flash(f"1 {item} removed from cart.")
+
+        if cart[item]['quantity'] <= 0:
+            del cart[item]
+
+        session['cart'] = cart
+        session.modified = True
+
+    return redirect(url_for('index1'))
 @app.route('/index1')
 def index1():
     flowers = load_data()
     addons = load_addons()
     cart = session.get('cart', {})
+    total = calculate_total(cart)
 
     return render_template(
         'index1.html',
         flowers=flowers,
         addons=addons,
-        cart=cart
+        cart=cart,
+        total=total
     )
 
 # Add selected flower to the shopping cart

@@ -21,15 +21,15 @@
             <button type="submit">Add to cart</button>
         </fieldset>
     </form>
-        {% with messages = get_flashed_messages () %}
+    {% with messages = get_flashed_messages () %}
         {% if messages %}
             <ul class="flashes">
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
             </ul>
-        {% endif %}
-        {% endwith %}
+    {% endif %}
+    {% endwith %}
     <form action="{{ url_for('add_to_cart' )}}" method="post">
         <fieldset>
             <legend for="addon">Select Add-ons</legend>
@@ -51,11 +51,13 @@
                 <li>{{ item }}: {{'%.2f' % details['quantity'] }} x
                                                 ${{ details['price'] }}
                     = ${{ details['quantity'] * details['price'] }}
+                    <a href="{{url_for('remove_from_cart', item=item) }}">[Remove]</a>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
         <p>Your cart is empty</p>
     {% endif %}
+    <h4>Total: ${{ '%.2f' % total }}</h4>
 </body>
 </html>
