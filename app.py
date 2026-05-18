@@ -1,3 +1,4 @@
+from ast import Add
 from itertools import product
 
 from flask import Flask, render_template, request, redirect, session, url_for, flash
@@ -8,16 +9,18 @@ app.secret_key = 'monkeydory'
 
 
 @app.route('/')
-def index():
+def home():
     flowers = load_data()
     addons = load_addons()
     cart = session.get('cart', {})
-    total = calculate_total(cart)
-    return render_template('index.html', flowers=flowers, addons=addons, cart=cart, total=total)
+    selected_addons = session.get('selected_addons', {}) 
+    total = calculate_total(cart, selected_addons)
+    return render_template('Index.html', flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons)
 
 # Calculate total cost based on cart contents and selected addons
-def calculate_total(cart) :
-    total = sum(item['price'] * item['quantity'] for item in cart. values())
+def calculate_total(cart, selected_addons):
+    total = sum(item['price'] * item['quantity'] for item in cart.values())
+    total += sum(price for price in selected_addons.values())
     return total
 
 def load_data():
@@ -61,30 +64,27 @@ def remove_from_cart():
         session['cart'] = cart
         session.modified = True
 
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 # Add selected flower to the shopping cart
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
 
     flower = request.form.get('flower')
-    addon = request.form.get('addon')
 
-    item = flower if flower else addon
+    item = flower if flower else None
 
     quantity = int(request.form['quantity'])
 
     flowers = load_data()
-    addons = load_addons()
 
     cart = session.get('cart', {})
 
-    # combine both dictionaries
-    products = {**flowers, **addons}
+    products = {**flowers}
 
     if item not in products:
         flash("Invalid item selected.")
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
 
     if item in cart:
         cart[item]['quantity'] += quantity
@@ -99,8 +99,28 @@ def add_to_cart():
 
     flash(f"{quantity} {item}(s) added to cart.")
 
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
+
+# Add selected addons to the session
+@app.route('/select_addon', methods=[ 'POST' ] )
+def select_addon():
+    selected_addons = {}
+    addons = load_addons()
+
+    selected_keys = request. form.getlist('addons')
+
+    for addon in selected_keys:
+        if addon in addons:
+            selected_addons [addon] = float (addons [addon] [ 'price' ] )
+
+    session ['selected_addons'] = selected_addons
+    session.modified = True
+
+    flash(f"{len(selected_addons)} add-on(s) added to cart.")
+
+    return redirect(url_for('home'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
-    

@@ -3,7 +3,6 @@
 {% block title %}Flower Shop{% endblock %}
 
 {% block content %}
-<body>
     <h1>Welcome to our Flower Shop! 1</h1>
     <form action="{{ url_for('add_to_cart' )}}" method="post">
         <fieldset>
@@ -18,7 +17,27 @@
             <button type="submit">Add to cart</button>
         </fieldset>
     </form>
-    {% with messages = get_flashed_messages () %}
+    <form action="{{ url_for('select_addon' )}}" method="post">
+        <fieldset>
+            <legend for="addons">Select Add-ons</legend>
+            {% for addon, details in addons.items() %}
+                <input type="checkbox" name="addons" value="{{ addon }}">
+                <label for="{{ addon }}">{{ addon }} (${{ details['price'] }})</label><br>
+            {% endfor %}
+            <button type="submit">Add to cart</button>
+        </fieldset>
+    </form>
+    <h2>Your Cart</h2>
+    {% if cart %}
+        <ul>
+            {% for item, details in cart.items() %}
+                <li>{{ item }}: {{details['quantity'] }} x
+                                                ${{ details['price'] }}
+                    = ${{ details['quantity'] * details['price'] }}
+                    <a href="{{url_for('remove_from_cart', item=item) }}">[Remove]</a>
+                </li>
+            {% endfor %}
+                {% with messages = get_flashed_messages () %}
         {% if messages %}
             <ul class="flashes">
             {% for message in messages %}
@@ -27,34 +46,16 @@
             </ul>
     {% endif %}
     {% endwith %}
-    <form action="{{ url_for('add_to_cart' )}}" method="post">
-        <fieldset>
-            <legend for="addon">Select Add-ons</legend>
-            <select name="addon" id="addon">
-                {% for addon, details in addons.items() %}
-                <option value="{{ addon }}">{{ addon }} - ${{ details['price'] }}</option>
-                {% endfor %}
-            </select>
-            <label for="quantity">Quantity</label>
-            <input type="number" name="quantity" value="1" min="1">
-            <button type="submit">Add to cart</button>
-        </fieldset>
-    </form>
-    </ul>
-    <h2>Your Cart</h2>
-    {% if cart %}
+    {% if selected_addons %}
         <ul>
-            {% for item, details in cart.items() %}
-                <li>{{ item }}: {{'%.2f' % details['quantity'] }} x
-                                                ${{ details['price'] }}
-                    = ${{ details['quantity'] * details['price'] }}
-                    <a href="{{url_for('remove_from_cart', item=item) }}">[Remove]</a>
-                </li>
+            {% for addon, price in selected_addons.items() %}
+                <li>{{ addon }}: ${{ '%.2f' % price }}</li>
             {% endfor %}
+         </ul>
+    {% endif %}
         </ul>
     {% else %}
         <p>Your cart is empty</p>
     {% endif %}
     <h4>Total: ${{ '%.2f' % total }}</h4>
-</body>
 {% endblock %}

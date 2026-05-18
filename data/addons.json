@@ -1,6 +1,6 @@
 {
-    "Gift wrap":{"price": 4.99, "stock": 100},
-    "Card with a note":{"price": 2.99, "stock": 100},
-    "Vase":{"price": 14.99, "stock": 50},
+    "Gift wrap":{"price": 4.99},
+    "Card with a note":{"price": 2.99},
+    "Vase":{"price": 14.99},
     "Delivery":{"price": 9.99}
 }
