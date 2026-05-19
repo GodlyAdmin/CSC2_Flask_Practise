@@ -3,7 +3,7 @@
 {% block title %}Flower Shop{% endblock %}
 
 {% block content %}
-    <h1>Welcome to our Flower Shop! 1</h1>
+    <h1>Welcome to our Flower Shop!</h1>
     <form action="{{ url_for('add_to_cart' )}}" method="post">
         <fieldset>
             <legend for="flower">Select Flowers</legend>
@@ -30,6 +30,15 @@
     <h2>Your Cart</h2>
     {% if cart %}
         <ul>
+             {% with messages = get_flashed_messages () %}
+            {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
             {% for item, details in cart.items() %}
                 <li>{{ item }}: {{details['quantity'] }} x
                                                 ${{ details['price'] }}
@@ -37,15 +46,6 @@
                     <a href="{{url_for('remove_from_cart', item=item) }}">[Remove]</a>
                 </li>
             {% endfor %}
-                {% with messages = get_flashed_messages () %}
-        {% if messages %}
-            <ul class="flashes">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-    {% endif %}
-    {% endwith %}
     {% if selected_addons %}
         <ul>
             {% for addon, price in selected_addons.items() %}
