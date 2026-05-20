@@ -14,13 +14,14 @@ def home():
     addons = load_addons()
     cart = session.get('cart', {})
     selected_addons = session.get('selected_addons', {}) 
-    total = calculate_total(cart, selected_addons)
-    return render_template('Index.html', flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons)
+    flower_subtotal = sum(item['price'] * item['quantity'] for item in cart.values())
+    addon_subtotal = sum(price for price in selected_addons.values())
+    total = calculate_total(flower_subtotal, addon_subtotal)
+    return render_template('Index.html', flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal)
 
 # Calculate total cost based on cart contents and selected addons
-def calculate_total(cart, selected_addons):
-    total = sum(item['price'] * item['quantity'] for item in cart.values())
-    total += sum(price for price in selected_addons.values())
+def calculate_total(flower_subtotal, addon_subtotal):
+    total = flower_subtotal + addon_subtotal
     return total
 
 def load_data():
