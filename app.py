@@ -17,7 +17,8 @@ def home():
     flower_subtotal = sum(item['price'] * item['quantity'] for item in cart.values())
     addon_subtotal = sum(price for price in selected_addons.values())
     total = calculate_total(flower_subtotal, addon_subtotal)
-    return render_template('Index.html', flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal)
+    customername = request.args.get('customer_name')
+    return render_template('Index.html', flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal, customer_name=customername)
 
 # Calculate total cost based on cart contents and selected addons
 def calculate_total(flower_subtotal, addon_subtotal):
@@ -103,25 +104,52 @@ def add_to_cart():
     return redirect(url_for('home'))
 
 # Add selected addons to the session
-@app.route('/select_addon', methods=[ 'POST' ] )
+@app.route('/select_addon', methods=['POST'])
 def select_addon():
-    selected_addons = {}
+
     addons = load_addons()
-
-    selected_keys = request. form.getlist('addons')
-
+    selected_keys = request.form.getlist('addons')
+    
+    selected_addons = session.get('selected_addons', {})  # load existing
+    
     for addon in selected_keys:
         if addon in addons:
-            selected_addons [addon] = float (addons [addon] [ 'price' ] )
+            selected_addons[addon] = float(addons[addon]['price'])
 
-    session ['selected_addons'] = selected_addons
+    session['selected_addons'] = selected_addons
     session.modified = True
-
-    flash(f"{len(selected_addons)} add-on(s) added to cart.")
-
+    flash(f"{len(selected_keys)} add-on(s) added to cart.")
     return redirect(url_for('home'))
 
+@app.route('/cancel_order', methods=['POST'])
+def cancel_order():
+    session.pop('cart', None)
+    session.pop('selected_addons', None)
+    session.modified = True
+    flash("Order cancelled.")
+    return redirect(url_for('home'))
 
+@app.route('/confirm_order', methods=['POST'])
+def confirm_order():
+    customer_name = request.form.get('customer_name')
+    if not customer_name:
+        flash("Please enter your name to confirm the order.")
+        return redirect(url_for('home'))
+
+    cart = session.get('cart', {})
+    selected_addons = session.get('selected_addons', {})
+    flower_subtotal = sum(item['price'] * item['quantity'] for item in cart.values())
+    addon_subtotal = sum(price for price in selected_addons.values())
+    total = calculate_total(flower_subtotal, addon_subtotal)
+
+    flash(f"Thank you {customer_name}! Your order has been confirmed. Total: ${total}")
+
+    session.pop('cart', None)
+    session.pop('selected_addons', None)
+    session.modified = True
+    return redirect(url_for('home'))
+
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)

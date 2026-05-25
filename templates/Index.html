@@ -28,17 +28,17 @@
         </fieldset>
     </form>
     <h2>Your Cart</h2>
+    {% with messages = get_flashed_messages () %}
+        {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
     {% if cart %}
         <ul>
-             {% with messages = get_flashed_messages () %}
-            {% if messages %}
-            <ul class="flashes">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% endwith %}
             {% for item, details in cart.items() %}
                 <li>{{ item }}: {{details['quantity'] }} x
                                                 ${{ details['price'] }}
@@ -57,7 +57,15 @@
     {% else %}
         <p>Your cart is empty</p>
     {% endif %}
+    <form action="{{ url_for('cancel_order') }}" method="post">
+        <button type="submit" onclick="return confirm('Are you sure you would like to cancel your order?')">Cancel Order</button>
+    </form>
     <h4>Subtotal flowers: ${{ '%.2f' % flower_subtotal }}</h4>
     <h4>Subtotal add-ons: ${{ '%.2f' % addon_subtotal }}</h4>
     <h4>Total: ${{ '%.2f' % total }}</h4>
+     <form action="{{ url_for('confirm_order') }}" method="post">
+    <label for="customer_name_checkout">Your Name :</label>
+    <input type="text" name="customer_name" id="customer_name_checkout" required>
+    <button onclick="return confirm('Are you sure you would like to checkout?')" type="submit">Checkout</button>
+    </form>
 {% endblock %}
