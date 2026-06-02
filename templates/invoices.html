@@ -4,5 +4,23 @@
 
 {% block content %}
 <h2>Invoice</h2>
-<p>This page will show the customer invoice after checkout</p>
+<ul>
+    <li><strong>Customer Name:</strong> {{ customer_name }}</li>
+    <li><strong>Invoice Date:</strong> {{ invoice_date }}</li>
+    <li><strong>Invoice Number:</strong> {{ invoice_number }}</li>
+    <li><strong>Items:</strong> {% for item, details in cart.items() %}
+        <li>{{ item }}: {{details['quantity'] }} x ${{ details['price'] }}
+            = ${{ details['quantity'] * details['price'] }}
+        </li>
+        {% endfor %} 
+        {% for addon, price in selected_addons.items() %}
+            <li>{{ addon }}: ${{ '%.2f' % price }}</li>
+        {% endfor %}
+    </li>
+    <li><strong>Flowers Total:</strong> ${{ flower_subtotal }}</li>
+    <li><strong>Add-ons Total:</strong> ${{ addon_subtotal }}</li>
+    <li><strong>Total Amount:</strong> ${{ total }}</li>
+
+    <a href="{{ url_for('home') }}">Back to Home</a>
+
 {% endblock %}

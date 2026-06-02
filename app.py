@@ -1,5 +1,8 @@
 from ast import Add
+import datetime
+from dbm import sqlite3
 from itertools import product
+from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 import json
@@ -136,20 +139,41 @@ def confirm_order():
         flash("Please enter your name to confirm the order.")
         return redirect(url_for('home'))
 
-    cart = session.get('cart', {})
-    selected_addons = session.get('selected_addons', {})
-    flower_subtotal = sum(item['price'] * item['quantity'] for item in cart.values())
-    addon_subtotal = sum(price for price in selected_addons.values())
-    total = calculate_total(flower_subtotal, addon_subtotal)
+    if cart := session.get('cart') is None:
+        flash("Your cart is empty. Please add items before confirming the order.")
+        return redirect(url_for('home'))
+    else:
 
-    flash(f"Thank you {customer_name}! Your order has been confirmed. Total: ${total}")
+        cart = session.get('cart', {})
+        selected_addons = session.get('selected_addons', {})
+        flower_subtotal = sum(item['price'] * item['quantity'] for item in cart.values())
+        addon_subtotal = sum(price for price in selected_addons.values())
+        total = calculate_total(flower_subtotal, addon_subtotal)
 
-    session.pop('cart', None)
-    session.pop('selected_addons', None)
-    session.modified = True
-    return redirect(url_for('home'))
+        flash(f"Thank you {customer_name}! Your order has been confirmed. Total: ${total}")
 
-    return redirect(url_for('home'))
-
+        session.pop('cart', None)
+        session.pop('selected_addons', None)
+        session.modified = True
+    
+        invoice_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        invoice_number = f"INV-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        return render_template('invoices.html', customer_name=customer_name, cart=cart, selected_addons=selected_addons, total=total, invoice_date=invoice_date, invoice_number=invoice_number, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal)
+    
+def initialise_database():
+    with sqlite3.connect('flower_shop.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS orders (
+                order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                invoice_number TEXT,
+                customer_name TEXT,
+                items TEXT,
+                addons TEXT,
+                total REAL,
+                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
 if __name__ == '__main__':
+    initialise_database()
     app.run(debug=True)

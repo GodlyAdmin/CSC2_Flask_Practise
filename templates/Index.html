@@ -43,7 +43,7 @@
                 <li>{{ item }}: {{details['quantity'] }} x
                                                 ${{ details['price'] }}
                     = ${{ details['quantity'] * details['price'] }}
-                    <a href="{{url_for('remove_from_cart', item=item) }}">[Remove]</a>
+                    <a href="{{url_for('remove_from_cart', item=item) }}">Remove item</a>
                 </li>
             {% endfor %}
     {% if selected_addons %}
@@ -51,7 +51,7 @@
             {% for addon, price in selected_addons.items() %}
                 <li>{{ addon }}: ${{ '%.2f' % price }}</li>
             {% endfor %}
-         </ul>
+        </ul>
     {% endif %}
         </ul>
     {% else %}
