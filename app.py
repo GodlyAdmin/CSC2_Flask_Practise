@@ -1,7 +1,5 @@
-from ast import Add
 import datetime
-from dbm import sqlite3
-from itertools import product
+import sqlite3
 from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, session, url_for, flash
@@ -135,11 +133,12 @@ def cancel_order():
 @app.route('/confirm_order', methods=['POST'])
 def confirm_order():
     customer_name = request.form.get('customer_name')
+    cart = session.get('cart')
     if not customer_name:
         flash("Please enter your name to confirm the order.")
         return redirect(url_for('home'))
 
-    if cart := session.get('cart') is None:
+    if not cart:
         flash("Your cart is empty. Please add items before confirming the order.")
         return redirect(url_for('home'))
     else:
@@ -158,6 +157,30 @@ def confirm_order():
     
         invoice_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         invoice_number = f"INV-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        #Save order to SQLite database
+        with sqlite3.connect('flower_shop.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO orders (invoice_number, customer_name, items, addons, total)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (invoice_number, customer_name, json.dumps(cart), json.dumps(selected_addons), total))
+            conn.commit()
+        #generate invoice file
+        invoice_filename= f"Invoices/{invoice_number}.txt"
+
+        with open(invoice_filename, 'w') as f:
+            f.write(f"Invoice Number: {invoice_number}\n")
+            f.write(f"Customer Name: {customer_name}\n")
+            f.write(f"Invoice Date: {invoice_date}\n\n")
+            f.write("Items:\n")
+            for item, details in cart.items():
+                f.write(f"{item}: {details['quantity']} x ${details['price']} = ${details['quantity'] * details['price']}\n")
+            f.write("\nAdd-ons:\n")
+            for addon, price in selected_addons.items():
+                f.write(f"{addon}: ${price}\n")
+            f.write(f"\nSubtotal Flowers: ${flower_subtotal:.2f}\n")
+            f.write(f"Subtotal Add-ons: ${addon_subtotal:.2f}\n")
+            f.write(f"Total: ${total:.2f}\n")
         return render_template('invoices.html', customer_name=customer_name, cart=cart, selected_addons=selected_addons, total=total, invoice_date=invoice_date, invoice_number=invoice_number, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal)
     
 def initialise_database():
@@ -174,6 +197,7 @@ def initialise_database():
                 date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+        
 if __name__ == '__main__':
     initialise_database()
     app.run(debug=True)

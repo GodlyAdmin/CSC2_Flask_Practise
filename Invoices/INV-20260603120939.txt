@@ -1,0 +1,19 @@
+Invoice Number: INV-20260603120939
+Customer Name: Admin
+Invoice Date: 2026-06-03 12:09:39
+
+Items:
+Daisy: 12 x $15 = $180
+Rose: 34 x $13 = $442
+Sunflower: 65 x $15 = $975
+Tulip: 32 x $11 = $352
+
+Add-ons:
+Card with a note: $2.99
+Delivery: $9.99
+Gift wrap: $4.99
+Vase: $14.99
+
+Subtotal Flowers: $1949.00
+Subtotal Add-ons: $32.96
+Total: $1981.96
