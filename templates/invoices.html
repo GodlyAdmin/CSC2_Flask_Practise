@@ -19,6 +19,8 @@
     </li>
     <li><strong>Flowers Total:</strong> ${{ flower_subtotal }}</li>
     <li><strong>Add-ons Total:</strong> ${{ addon_subtotal }}</li>
+    <li><strong>Discount Applied:</strong> {% if discount_applied=true %}Yes{% else %}No{% endif %}</li>
+    <li><strong>Discount Amount:</strong> ${{ '%.2f' % (total * 0.1) }}</li>
     <li><strong>Total Amount:</strong> ${{ total }}</li>
 
     <a href="{{ url_for('home') }}">Back to Home</a>

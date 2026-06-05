@@ -17,14 +17,18 @@ def home():
     selected_addons = session.get('selected_addons', {}) 
     flower_subtotal = sum(item['price'] * item['quantity'] for item in cart.values())
     addon_subtotal = sum(price for price in selected_addons.values())
-    total = calculate_total(flower_subtotal, addon_subtotal)
+    total, discount_applied = calculate_total(flower_subtotal, addon_subtotal)
     customername = request.args.get('customer_name')
-    return render_template('Index.html', flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal, customer_name=customername)
+    return render_template('Index.html', flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal, customer_name=customername, discount_applied=discount_applied)
 
 # Calculate total cost based on cart contents and selected addons
 def calculate_total(flower_subtotal, addon_subtotal):
     total = flower_subtotal + addon_subtotal
-    return total
+    discount_applied = False 
+    if total > 180:
+        total = total * 0.9
+        discount_applied = True
+    return total, discount_applied
 
 def load_data():
     with open('data/flowers.json') as file:
@@ -42,7 +46,7 @@ def about():
 
 @app.route('/checkout')
 def checkout():
-    return render_template('invoices.html')
+    return render_template('invoices.html', discount_applied=discount_applied)
 
 @app.route('/orders')
 def order_history():
@@ -147,7 +151,7 @@ def confirm_order():
         selected_addons = session.get('selected_addons', {})
         flower_subtotal = sum(item['price'] * item['quantity'] for item in cart.values())
         addon_subtotal = sum(price for price in selected_addons.values())
-        total = calculate_total(flower_subtotal, addon_subtotal)
+        total, discount_applied = calculate_total(flower_subtotal, addon_subtotal)
 
         flash(f"Thank you {customer_name}! Your order has been confirmed. Total: ${total}")
 

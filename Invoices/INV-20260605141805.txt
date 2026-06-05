@@ -1,0 +1,19 @@
+Invoice Number: INV-20260605141805
+Customer Name: Test discount
+Invoice Date: 2026-06-05 14:18:05
+
+Items:
+Daisy: 33 x $15 = $495
+Rose: 23 x $13 = $299
+Sunflower: 73 x $15 = $1095
+Tulip: 43 x $11 = $473
+
+Add-ons:
+Card with a note: $2.99
+Delivery: $9.99
+Gift wrap: $4.99
+Vase: $14.99
+
+Subtotal Flowers: $2362.00
+Subtotal Add-ons: $32.96
+Total: $2155.46
