@@ -50,7 +50,24 @@ def checkout():
 
 @app.route('/orders')
 def order_history():
-    return render_template('order_history.html')
+    with sqlite3.connect('flower_shop.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM orders')
+        rows = cursor.fetchall()
+
+    orders = []
+    for row in rows:
+        orders.append({
+            'order_id': row[0],
+            'invoice_number': row[1],
+            'customer_name': row[2],
+            'items': json.loads(row[3]),
+            'addons': json.loads(row[4]),
+            'total': row[5],
+            'date': row[6]
+        })
+
+    return render_template('order_history.html', orders=orders)
 
 @app.route("/remove_from_cart")
 def remove_from_cart():
@@ -113,7 +130,7 @@ def add_to_cart():
     session.modified = True
 
     flash(f"{quantity} {item}(s) added to cart.")
-    
+
     return redirect(url_for('home'))
 
 # Add selected addons to the session

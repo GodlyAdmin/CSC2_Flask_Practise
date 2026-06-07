@@ -1,0 +1,12 @@
+Invoice Number: INV-20260607224635
+Customer Name: test
+Invoice Date: 2026-06-07 22:46:35
+
+Items:
+Rose: 1 x $13 = $13
+
+Add-ons:
+
+Subtotal Flowers: $13.00
+Subtotal Add-ons: $0.00
+Total: $13.00
