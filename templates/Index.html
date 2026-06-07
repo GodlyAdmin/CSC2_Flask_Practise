@@ -17,6 +17,12 @@
             <button type="submit">Add to cart</button>
         </fieldset>
     </form>
+    <h3>Available Stock</h3>
+    <ul>
+        {% for flower, details in flowers.items() %}
+        <li>{{ flower }}: {{ details['stock'] }} remaining</li>
+        {% endfor %}
+    </ul>
     <form action="{{ url_for('select_addon' )}}" method="post">
         <fieldset>
             <legend for="addons">Select Add-ons</legend>
