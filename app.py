@@ -241,6 +241,14 @@ def initialise_database():
                 date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+@app.route('/cancel_saved_order/<int:order_id>', methods=['POST'])
+def cancel_saved_order(order_id):
+    with sqlite3.connect('flower_shop.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM orders WHERE order_id = ?', (order_id,))
+        conn.commit()
+    flash("Order cancelled.")
+    return redirect(url_for('order_history'))
 
 if __name__ == '__main__':
     initialise_database()
