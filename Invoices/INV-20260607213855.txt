@@ -1,0 +1,17 @@
+Invoice Number: INV-20260607213855
+Customer Name: Test
+Invoice Date: 2026-06-07 21:38:55
+
+Items:
+Rose: 180 x $13 = $2340
+
+Add-ons:
+Card with a note: $2.99
+Delivery: $9.99
+Gift wrap: $4.99
+Vase: $14.99
+
+Subtotal Flowers: $2340.00
+Subtotal Add-ons: $32.96
+10% discount applied.
+Total: $2135.66

@@ -1,0 +1,16 @@
+Invoice Number: INV-20260607151119
+Customer Name: Admin
+Invoice Date: 2026-06-07 15:11:19
+
+Items:
+Rose: 90 x $13 = $1170
+
+Add-ons:
+Card with a note: $2.99
+Delivery: $9.99
+Gift wrap: $4.99
+Vase: $14.99
+
+Subtotal Flowers: $1170.00
+Subtotal Add-ons: $32.96
+Total: $1082.66

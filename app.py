@@ -46,7 +46,7 @@ def about():
 
 @app.route('/checkout')
 def checkout():
-    return render_template('invoices.html', discount_applied=discount_applied)
+    return render_template('invoices.html', discount_applied=False)
 
 @app.route('/orders')
 def order_history():
@@ -114,9 +114,9 @@ def select_addon():
 
     addons = load_addons()
     selected_keys = request.form.getlist('addons')
-    
-    selected_addons = session.get('selected_addons', {})  # load existing
-    
+
+    selected_addons = session.get('selected_addons', {})
+
     for addon in selected_keys:
         if addon in addons:
             selected_addons[addon] = float(addons[addon]['price'])
@@ -158,7 +158,7 @@ def confirm_order():
         session.pop('cart', None)
         session.pop('selected_addons', None)
         session.modified = True
-    
+
         invoice_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         invoice_number = f"INV-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         #Save order to SQLite database
@@ -170,7 +170,7 @@ def confirm_order():
             ''', (invoice_number, customer_name, json.dumps(cart), json.dumps(selected_addons), total))
             conn.commit()
         #generate invoice file
-        invoice_filename= f"Invoices/{invoice_number}.txt"
+        invoice_filename = f"Invoices/{invoice_number}.txt"
 
         with open(invoice_filename, 'w') as f:
             f.write(f"Invoice Number: {invoice_number}\n")
@@ -184,9 +184,12 @@ def confirm_order():
                 f.write(f"{addon}: ${price}\n")
             f.write(f"\nSubtotal Flowers: ${flower_subtotal:.2f}\n")
             f.write(f"Subtotal Add-ons: ${addon_subtotal:.2f}\n")
+            if discount_applied:
+                f.write("10% discount applied.\n")
             f.write(f"Total: ${total:.2f}\n")
-        return render_template('invoices.html', customer_name=customer_name, cart=cart, selected_addons=selected_addons, total=total, invoice_date=invoice_date, invoice_number=invoice_number, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal)
-    
+
+        return render_template('invoices.html', invoice_number=invoice_number, customer_name=customer_name, invoice_date=invoice_date, cart=cart, selected_addons=selected_addons, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal, total=total, discount_applied=discount_applied)
+
 def initialise_database():
     with sqlite3.connect('flower_shop.db') as conn:
         cursor = conn.cursor()
@@ -201,7 +204,7 @@ def initialise_database():
                 date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
-        
+
 if __name__ == '__main__':
     initialise_database()
     app.run(debug=True)
