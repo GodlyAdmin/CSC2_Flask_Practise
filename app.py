@@ -188,6 +188,18 @@ def confirm_order():
                 f.write("10% discount applied.\n")
             f.write(f"Total: ${total:.2f}\n")
 
+        # Update the stock in flowers.json
+        with open('data/flowers.json', 'r') as file:
+            flower_data = json.load(file)
+
+            for flower_name, details in cart.items():
+                if flower_name in flower_data:
+                    flower_data[flower_name]['stock'] -= details['quantity']
+                    if flower_data[flower_name]['stock'] < 0:
+                        flower_data[flower_name]['stock'] = 0  # prevent negative stock
+
+            with open('data/flowers.json', 'w') as file:
+                json.dump(flower_data, file, indent=4)
         return render_template('invoices.html', invoice_number=invoice_number, customer_name=customer_name, invoice_date=invoice_date, cart=cart, selected_addons=selected_addons, flower_subtotal=flower_subtotal, addon_subtotal=addon_subtotal, total=total, discount_applied=discount_applied)
 
 def initialise_database():
