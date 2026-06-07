@@ -91,6 +91,69 @@ a:hover {
     background-color: #33230b;
 }
 
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: #1d2417;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+}
+
+tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+tr:hover {
+    background-color: #f0ece4;
+}
+
+/* Remove bullet points from lists inside table */
+table ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+table li {
+    background: none;
+    padding: 2px 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+/* Cancel button inside table */
+table button {
+    background-color: #8b1a1a;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+table button:hover {
+    background-color: #6b1414;
+}
+
 /* @media Section*/
 /* Mobile layout */
 @media (max-width: 600px) {
