@@ -1,0 +1,15 @@
+Invoice Number: INV-20260607224248
+Customer Name: Test stock
+Invoice Date: 2026-06-07 22:42:48
+
+Items:
+Daisy: 27 x $15 = $405
+
+Add-ons:
+Card with a note: $2.99
+Gift wrap: $4.99
+
+Subtotal Flowers: $405.00
+Subtotal Add-ons: $7.98
+10% discount applied.
+Total: $371.68

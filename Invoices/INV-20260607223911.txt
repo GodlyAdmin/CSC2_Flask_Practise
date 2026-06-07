@@ -1,0 +1,17 @@
+Invoice Number: INV-20260607223911
+Customer Name: Test stock
+Invoice Date: 2026-06-07 22:39:11
+
+Items:
+Daisy: 14 x $15 = $210
+Lily: 8 x $9 = $72
+Rose: 30 x $13 = $390
+Sunflower: 13 x $15 = $195
+Tulip: 22 x $11 = $242
+
+Add-ons:
+
+Subtotal Flowers: $1109.00
+Subtotal Add-ons: $0.00
+10% discount applied.
+Total: $998.10

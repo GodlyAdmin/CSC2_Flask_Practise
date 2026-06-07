@@ -1,22 +1,22 @@
 {
     "Rose": {
         "price": 13,
-        "stock": 25
+        "stock": 90
     },
     "Tulip": {
         "price": 11,
-        "stock": 7
+        "stock": 75
     },
     "Lily": {
         "price": 9,
-        "stock": 3
+        "stock": 100
     },
     "Daisy": {
         "price": 15,
-        "stock": 41
+        "stock": 50
     },
     "Sunflower": {
         "price": 15,
-        "stock": 13
+        "stock": 50
     }
 }

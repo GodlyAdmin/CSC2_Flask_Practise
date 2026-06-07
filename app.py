@@ -93,6 +93,14 @@ def add_to_cart():
         flash("Invalid item selected.")
         return redirect(url_for('home'))
 
+    # Check available stock accounting for what's already in cart
+    already_in_cart = cart[item]['quantity'] if item in cart else 0
+    available_stock = products[item]['stock'] - already_in_cart
+
+    if quantity > available_stock:
+        flash(f"Sorry, only {available_stock} {item}(s) available.")
+        return redirect(url_for('home'))
+
     if item in cart:
         cart[item]['quantity'] += quantity
     else:
@@ -105,7 +113,7 @@ def add_to_cart():
     session.modified = True
 
     flash(f"{quantity} {item}(s) added to cart.")
-
+    
     return redirect(url_for('home'))
 
 # Add selected addons to the session
